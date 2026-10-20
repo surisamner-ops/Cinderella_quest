@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> The Magic Crown Quest</title>
+    <title>👑 The Magic Crown Quest</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,6 @@
             position: relative;
         }
 
-        /* STARS BACKGROUND */
         .stars {
             position: fixed;
             top: 0;
@@ -59,7 +58,6 @@
             100% { transform: translateX(1200px) translateY(600px); opacity: 0; }
         }
 
-        /* MAGICAL PARTICLES */
         .particles {
             position: fixed;
             top: 0;
@@ -76,17 +74,16 @@
             height: 6px;
             background: #ffd700;
             border-radius: 50%;
-            box-shadow: 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 45px #ff6b6b;
+            box-shadow: 0 0 15px #ffd700, 0 0 30px #ffd700;
             animation: float var(--duration) ease-in-out infinite;
             opacity: 0;
         }
 
         @keyframes float {
-            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
             10% { opacity: 1; }
-            50% { transform: translateY(50vh) scale(1.2) rotate(180deg); }
             90% { opacity: 1; }
-            100% { transform: translateY(-100vh) scale(1) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
         }
 
         .sparkle {
@@ -130,7 +127,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 15px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
         }
 
         .subtitle {
@@ -148,7 +144,7 @@
             margin-bottom: 30px;
             display: none;
             animation: fadeIn 1s ease-out;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
         }
 
         .quest-stage.active {
@@ -189,26 +185,21 @@
             margin-bottom: 30px;
         }
 
-        /* ====== ИСПРАВЛЕННЫЕ ДВЕРИ ====== */
+        /* ===== НОВЫЙ МЕХАНИЗМ ДВЕРЕЙ - ПРОСТОЙ И НАДЁЖНЫЙ ===== */
         .door-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: 30px 0;
-            perspective: 1200px; /* ВАЖНО: добавлено для 3D эффекта */
         }
 
         .magic-door {
             width: 380px;
             height: 480px;
             position: relative;
-            cursor: pointer;
-            transition: transform 0.3s;
-            transform-style: preserve-3d; /* ВАЖНО: для 3D дочерних элементов */
-        }
-
-        .magic-door:hover {
-            transform: scale(1.03);
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
         }
 
         .door-frame {
@@ -216,10 +207,8 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(135deg, #4a3f1a 0%, #2d2410 100%);
-            border-radius: 25px 25px 0 0;
             border: 10px solid #8b7355;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.6);
-            overflow: hidden; /* ВАЖНО: чтобы двери не выходили за рамки */
+            border-radius: 20px;
         }
 
         .door-panel {
@@ -229,23 +218,18 @@
             top: 0;
             background: linear-gradient(135deg, #6b5637 0%, #4a3f1a 100%);
             border: 5px solid #8b7355;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.7);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 2;
         }
 
         .door-left {
             left: 0;
-            transform-origin: left center; /* ВАЖНО: точка вращения слева */
-            border-radius: 20px 0 0 0;
-            border-right: 3px solid #3d2e10;
+            border-radius: 15px 0 0 15px;
         }
 
         .door-right {
             right: 0;
-            transform-origin: right center; /* ВАЖНО: точка вращения справа */
-            border-radius: 0 20px 0 0;
-            border-left: 3px solid #3d2e10;
+            border-radius: 0 15px 15px 0;
         }
 
         .door-knob {
@@ -267,13 +251,13 @@
             left: 15px;
         }
 
-        /* АНИМАЦИЯ ОТКРЫТИЯ */
+        /* АНИМАЦИЯ ОТКРЫТИЯ - ДВЕРИ РАЗЪЕЗЖАЮТСЯ */
         .door.open .door-left {
-            transform: rotateY(-110deg);
+            transform: translateX(-100%);
         }
 
         .door.open .door-right {
-            transform: rotateY(110deg);
+            transform: translateX(100%);
         }
 
         .door-light {
@@ -284,7 +268,7 @@
             height: 100%;
             background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.9) 0%, rgba(255, 215, 0, 0.4) 40%, transparent 70%);
             opacity: 0;
-            transition: opacity 1s ease-in-out 0.3s;
+            transition: opacity 1s ease-in-out 0.5s;
             z-index: 1;
         }
 
@@ -294,23 +278,20 @@
 
         .door-reveal {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 360px;
-            height: 460px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(255, 255, 255, 0.97);
-            border-radius: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 1s ease-in-out 0.5s;
+            transition: opacity 1s ease-in-out 0.8s;
             z-index: 0;
             padding: 25px;
             text-align: center;
-            box-shadow: 0 0 70px rgba(255, 215, 0, 0.7);
         }
 
         .door.open .door-reveal {
@@ -345,7 +326,6 @@
             color: #1a1f4b;
             font-size: 1.4em;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .reveal-location {
@@ -354,7 +334,6 @@
             margin-top: 8px;
         }
 
-        /* KEY INPUT */
         .key-container {
             margin-top: 30px;
             text-align: center;
@@ -383,7 +362,6 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             transition: all 0.3s;
-            backdrop-filter: blur(10px);
         }
 
         .key-input:focus {
@@ -508,7 +486,6 @@
             h1 { font-size: 2em; }
             .quest-stage { padding: 25px 20px; border-radius: 20px; }
             .magic-door { width: 320px; height: 420px; }
-            .door-reveal { width: 300px; height: 400px; }
             .task-title { font-size: 1.5em; }
         }
     </style>
@@ -526,7 +503,7 @@
         <!-- STAGE 1 -->
         <div class="quest-stage active" id="stage1">
             <div class="stage-number">1</div>
-            <h2 class="task-title"> The Library Door</h2>
+            <h2 class="task-title">📚 The Library Door</h2>
             <p class="task-description">
                 The Fairy Godmother's first clue leads to a place filled with ancient wisdom and countless stories. 
                 Where books whisper secrets and knowledge awaits...
@@ -545,7 +522,7 @@
                     </div>
                     <div class="door-reveal">
                         <div class="reveal-image">
-                            <img src="your-photo-1.jpg" alt="Library Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='📚👑'">
+                            <img src="your-photo-1.jpg" alt="Library Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
                         </div>
                         <div class="reveal-text">The Crown Was Here!</div>
                         <div class="reveal-location">📍 The Library</div>
@@ -554,7 +531,7 @@
             </div>
 
             <div class="key-container">
-                <div class="key-label"> Enter the Key to Unlock:</div>
+                <div class="key-label">🔑 Enter the Key to Unlock:</div>
                 <input type="text" class="key-input" id="key1" placeholder="TYPE THE CODE">
                 <br>
                 <button class="unlock-btn" onclick="unlockDoor(1)">Unlock Door</button>
@@ -564,7 +541,7 @@
             </div>
 
             <div class="hint">
-                 <strong>Hint:</strong> This magical place is full of books where students study and read...
+                💡 <strong>Hint:</strong> This magical place is full of books where students study and read...
             </div>
         </div>
 
@@ -590,7 +567,7 @@
                     </div>
                     <div class="door-reveal">
                         <div class="reveal-image">
-                            <img src="your-photo-2.jpg" alt="Cafeteria Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='🍕👑'">
+                            <img src="your-photo-2.jpg" alt="Cafeteria Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
                         </div>
                         <div class="reveal-text">The Crown Traveled Here!</div>
                         <div class="reveal-location">📍 The School Cafeteria</div>
@@ -616,7 +593,7 @@
         <!-- STAGE 3 -->
         <div class="quest-stage" id="stage3">
             <div class="stage-number">3</div>
-            <h2 class="task-title"> The Principal's Office Door</h2>
+            <h2 class="task-title">🏫 The Principal's Office Door</h2>
             <p class="task-description">
                 The final journey! The Fairy Godmother visited someone very important - the person 
                 who helps younger students and keeps the school running smoothly...
@@ -638,7 +615,7 @@
                             <img src="your-photo-3.jpg" alt="Principal Office Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
                         </div>
                         <div class="reveal-text">The Crown is Safe!</div>
-                        <div class="reveal-location">📍 Junior School Principal's Office</div>
+                        <div class="reveal-location"> Junior School Principal's Office</div>
                     </div>
                 </div>
             </div>
@@ -654,7 +631,7 @@
             </div>
 
             <div class="hint">
-                💡 <strong>Hint:</strong> Where does the junior school principal work?
+                 <strong>Hint:</strong> Where does the junior school principal work?
             </div>
         </div>
 
@@ -669,7 +646,7 @@
                     Cinderella can finally marry the Prince! 👰‍♀️🤴
                 </p>
                 <div style="background: rgba(255, 215, 0, 0.1); border: 3px solid #ffd700; border-radius: 18px; padding: 25px; margin: 35px 0;">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🎉🎊</div>
+                    <div style="font-size: 2.5em; margin-bottom: 15px;">🎊</div>
                     <p style="color: #ffd700; font-size: 1.4em; font-weight: bold;">
                         You are a true magical detective!
                     </p>
