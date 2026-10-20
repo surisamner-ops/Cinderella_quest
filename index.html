@@ -498,7 +498,7 @@
                         </div>
                         <div class="door-reveal" id="door1-reveal">
                             <div class="reveal-image" id="reveal-img-1">
-                                <img src="your-photo-1.jpg.png" alt="Library Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='⚠️ Photo not found<br><small>Check filename in GitHub</small>'">
+                                <img src="your-photo-1.jpg" alt="Library Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='⚠️ Photo not found<br><small>Check filename in GitHub</small>'">
                                 <div class="fallback">Loading...</div>
                             </div>
                             <div class="reveal-text">The Crown Was Here!</div>
@@ -551,7 +551,7 @@
                         </div>
                         <div class="door-reveal" id="door2-reveal">
                             <div class="reveal-image" id="reveal-img-2">
-                                <img src="your-photo-2.jpg.png" alt="Cafeteria Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='️ Photo not found<br><small>Check filename in GitHub</small>'">
+                                <img src="your-photo-2.jpg" alt="Cafeteria Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='️ Photo not found<br><small>Check filename in GitHub</small>'">
                                 <div class="fallback">Loading...</div>
                             </div>
                             <div class="reveal-text">The Crown Traveled Here!</div>
@@ -604,7 +604,7 @@
                         </div>
                         <div class="door-reveal" id="door3-reveal">
                             <div class="reveal-image" id="reveal-img-3">
-                                <img src="your-photo-3.jpg.png" alt="Principal Office Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='️ Photo not found<br><small>Check filename in GitHub</small>'">
+                                <img src="your-photo-3.jpg" alt="Principal Office Crown" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'; this.nextElementSibling.innerHTML='️ Photo not found<br><small>Check filename in GitHub</small>'">
                                 <div class="fallback">Loading...</div>
                             </div>
                             <div class="reveal-text">The Crown is Safe!</div>
@@ -714,9 +714,9 @@
         // ===== ПРОВЕРКА ФОТО =====
         function checkPhotos() {
             const photos = [
-                { id: 1, src: 'your-photo-1.jpg.png' },
-                { id: 2, src: 'your-photo-2.jpg.png' },
-                { id: 3, src: 'your-photo-3.jpg.png' }
+                { id: 1, src: 'your-photo-1.jpg' },
+                { id: 2, src: 'your-photo-2.jpg' },
+                { id: 3, src: 'your-photo-3.jpg' }
             ];
 
             const debugContent = document.getElementById('debugContent');
