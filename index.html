@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Magic Crown Quest</title>
+    <title>👑 The Magic Crown Quest</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -16,9 +16,28 @@
             position: relative;
         }
 
+        /* SVG BACKGROUND ELEMENTS */
+        .svg-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
         .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle var(--duration) ease-in-out infinite; opacity: var(--opacity); }
-        @keyframes twinkle { 0%, 100% { opacity: var(--opacity); } 50% { opacity: 0.2; } }
+        .star { 
+            position: absolute; 
+            background: white; 
+            border-radius: 50%; 
+            animation: twinkle var(--duration) ease-in-out infinite; 
+            opacity: var(--opacity);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        @keyframes twinkle { 0%, 100% { opacity: var(--opacity); transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.8); } }
 
         .shooting-star {
             position: absolute; width: 150px; height: 3px;
@@ -51,16 +70,66 @@
         }
         @keyframes sparkleAnim { 0%, 100% { opacity: 0; transform: scale(0); } 50% { opacity: 1; transform: scale(1.5); } }
 
+        /* MAGICAL ORBS */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.4;
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.6), transparent);
+            top: 10%; left: 5%;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 250px; height: 250px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.5), transparent);
+            top: 60%; right: 5%;
+            animation-delay: 2s;
+        }
+        .orb-3 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.4), transparent);
+            bottom: 10%; left: 50%;
+            animation-delay: 4s;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
         .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; position: relative; z-index: 10; }
 
-        header { text-align: center; margin-bottom: 40px; }
+        header { 
+            text-align: center; 
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
         h1 {
             font-size: 2.8em;
             background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            background-clip: text;
             margin-bottom: 15px;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+            animation: titleGlow 3s ease-in-out infinite;
         }
-        .subtitle { font-size: 1.2em; color: #b8c5ff; line-height: 1.6; }
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1)); }
+        }
+
+        .subtitle { 
+            font-size: 1.2em; 
+            color: #b8c5ff; 
+            line-height: 1.6; 
+        }
 
         .quest-stage {
             background: rgba(255, 255, 255, 0.05);
@@ -70,39 +139,147 @@
             padding: 35px 30px;
             margin-bottom: 30px;
             display: none;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(255, 215, 0, 0.05);
+            position: relative;
+            overflow: hidden;
         }
         .quest-stage.active { display: block; }
 
+        /* MAGICAL STAGE NUMBER */
         .stage-number {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             background: linear-gradient(135deg, #ffd700, #ffed4e);
             color: #1a1f4b;
-            width: 50px; height: 50px; border-radius: 50%;
-            text-align: center; line-height: 50px;
-            font-size: 1.6em; font-weight: bold;
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%;
+            text-align: center; 
+            line-height: 60px;
+            font-size: 1.8em; 
+            font-weight: bold;
             margin-bottom: 15px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
+            position: relative;
+            animation: stageNumberPulse 2s ease-in-out infinite;
+        }
+        .stage-number::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid #ffd700;
+            animation: ripple 2s ease-out infinite;
+        }
+        .stage-number::after {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        @keyframes stageNumberPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(255, 215, 0, 1); }
+        }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
-        .task-title { font-size: 1.8em; color: #ffd700; margin-bottom: 15px; }
-        .task-description { font-size: 1.1em; color: #d4d9ff; line-height: 1.7; margin-bottom: 30px; }
+        .task-title { 
+            font-size: 1.8em; 
+            color: #ffd700; 
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .task-description { 
+            font-size: 1.1em; 
+            color: #d4d9ff; 
+            line-height: 1.7; 
+            margin-bottom: 30px; 
+        }
 
-        /* ===== ДВЕРИ - ПРОСТОЙ МЕХАНИЗМ ===== */
+        /* ===== MAGICAL DOORS WITH SVG EFFECTS ===== */
         .door-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             margin: 30px 0;
+            position: relative;
+        }
+
+        .door-wrapper {
+            position: relative;
+            filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
         }
 
         .magic-door {
             width: 380px;
             height: 480px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             border-radius: 20px;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5);
-            background: #2d2410;
+        }
+
+        /* MAGICAL GLOW AROUND DOOR */
+        .door-glow {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+            filter: blur(20px);
+            opacity: 0.6;
+            animation: doorGlowPulse 3s ease-in-out infinite;
+            z-index: -1;
+        }
+        @keyframes doorGlowPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+
+        .magic-door::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #ffd700);
+            border-radius: 25px;
+            opacity: 0;
+            z-index: -2;
+            animation: rainbowGlow 4s linear infinite;
+            background-size: 400% 400%;
+        }
+        @keyframes rainbowGlow {
+            0% { background-position: 0% 50%; opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { background-position: 400% 50%; opacity: 0; }
+        }
+
+        .door-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a3f1a 0%, #2d2410 100%);
+            border: 8px solid #8b7355;
+            border-radius: 20px;
+            box-shadow: 
+                inset 0 0 50px rgba(0, 0, 0, 0.8),
+                0 0 30px rgba(255, 215, 0, 0.4),
+                inset 0 0 100px rgba(255, 215, 0, 0.1);
+            overflow: hidden;
         }
 
         .door-panel {
@@ -111,9 +288,12 @@
             height: 100%;
             top: 0;
             background: linear-gradient(135deg, #6b5637 0%, #4a3f1a 100%);
-            border: 5px solid #8b7355;
+            border: 4px solid #8b7355;
             z-index: 2;
-            /* Анимация задаётся через JS */
+            /* Enhanced with magical texture */
+            background-image: 
+                linear-gradient(135deg, rgba(107, 86, 55, 0.9) 0%, rgba(74, 63, 26, 0.9) 100%),
+                repeating-linear-gradient(90deg, transparent, transparent 50px, rgba(255, 215, 0, 0.03) 50px, rgba(255, 215, 0, 0.03) 51px);
         }
 
         .door-left {
@@ -130,23 +310,50 @@
 
         .door-knob {
             position: absolute;
-            width: 25px; height: 25px;
-            background: radial-gradient(circle, #ffd700, #b8860b);
+            width: 30px; height: 30px;
+            background: radial-gradient(circle, #ffd700, #ffed4e, #b8860b);
             border-radius: 50%;
             top: 50%;
             transform: translateY(-50%);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.9),
+                0 0 40px rgba(255, 215, 0, 0.6),
+                inset 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: knobGlow 2s ease-in-out infinite;
+        }
+        @keyframes knobGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 40px rgba(255, 215, 0, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8); }
         }
         .door-left .door-knob { right: 15px; }
         .door-right .door-knob { left: 15px; }
 
+        /* MAGICAL RUNES/SYMBOLS ON DOOR */
+        .door-rune {
+            position: absolute;
+            font-size: 2em;
+            opacity: 0.3;
+            color: #ffd700;
+            animation: runeFloat 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .rune-1 { top: 20%; left: 20%; animation-delay: 0s; }
+        .rune-2 { top: 60%; left: 15%; animation-delay: 1s; }
+        .rune-3 { top: 30%; right: 20%; animation-delay: 2s; }
+        .rune-4 { bottom: 20%; right: 15%; animation-delay: 3s; }
+        @keyframes runeFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-10px) rotate(5deg); opacity: 0.6; }
+        }
+
         .door-light {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.9) 0%, transparent 70%);
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.9) 0%, rgba(255, 215, 0, 0.4) 40%, transparent 70%);
             opacity: 0;
             transition: opacity 1s ease-in-out;
             z-index: 1;
+            filter: blur(10px);
         }
 
         .door-reveal {
@@ -162,6 +369,8 @@
             z-index: 0;
             padding: 25px;
             text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
         }
 
         .reveal-image {
@@ -175,6 +384,7 @@
             font-size: 5em;
             overflow: hidden;
             position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
         .reveal-image img {
             width: 100%; height: 100%;
@@ -186,7 +396,15 @@
         .reveal-location { color: #666; font-size: 1em; margin-top: 8px; }
 
         .key-container { margin-top: 30px; text-align: center; }
-        .key-label { font-size: 1.2em; color: #ffd700; margin-bottom: 12px; }
+        .key-label { 
+            font-size: 1.2em; 
+            color: #ffd700; 
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
 
         .key-input {
             width: 100%; max-width: 350px;
@@ -196,11 +414,13 @@
             border-radius: 12px; color: #fff;
             text-align: center; text-transform: uppercase;
             letter-spacing: 3px; transition: all 0.3s;
+            backdrop-filter: blur(10px);
         }
         .key-input:focus {
             outline: none;
             border-color: #ffd700;
             box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+            background: rgba(255, 255, 255, 0.15);
         }
         .key-input::placeholder { color: rgba(255, 255, 255, 0.5); }
 
@@ -213,8 +433,24 @@
             box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
             text-transform: uppercase; letter-spacing: 2px;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
-        .unlock-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(255, 215, 0, 0.7); }
+        .unlock-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        .unlock-btn:hover::before {
+            left: 100%;
+        }
+        .unlock-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 45px rgba(255, 215, 0, 0.7); 
+        }
 
         .error-message {
             color: #ff6b6b; margin-top: 12px; font-size: 1em;
@@ -228,8 +464,14 @@
             padding: 18px; border-radius: 12px;
             margin-top: 15px; font-size: 1.1em;
             display: none;
+            animation: successPulse 0.6s;
         }
         .success-message.show { display: block; }
+        @keyframes successPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         .next-btn {
             margin-top: 25px; padding: 16px 45px;
@@ -255,15 +497,6 @@
 
         footer { text-align: center; color: rgba(255, 255, 255, 0.5); padding: 25px; margin-top: 40px; }
 
-        /* DEBUG кнопка */
-        .debug-btn {
-            position: fixed; bottom: 20px; right: 20px;
-            background: #ff6b6b; color: white;
-            border: none; padding: 10px 20px;
-            border-radius: 8px; cursor: pointer;
-            font-size: 0.9em; z-index: 9999;
-        }
-
         @media (max-width: 768px) {
             h1 { font-size: 2em; }
             .quest-stage { padding: 25px 20px; }
@@ -272,45 +505,71 @@
     </style>
 </head>
 <body>
+    <!-- SVG BACKGROUND -->
+    <svg class="svg-bg" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+        <!-- Magical orbs -->
+        <circle class="orb orb-1" cx="100" cy="150" r="150"/>
+        <circle class="orb orb-2" cx="800" cy="500" r="125"/>
+        <circle class="orb orb-3" cx="450" cy="700" r="100"/>
+    </svg>
+
     <div class="stars" id="stars"></div>
     <div class="particles" id="particles"></div>
 
     <div class="container">
         <header>
-            <h1>The Magic Crown Quest</h1>
+            <h1> The Magic Crown Quest</h1>
             <p class="subtitle">Unlock the magical doors to find the enchanted crown<br>and help Cinderella marry the Prince!</p>
         </header>
 
         <!-- STAGE 1 -->
         <div class="quest-stage active" id="stage1">
             <div class="stage-number">1</div>
-            <h2 class="task-title"> The Library Door</h2>
+            <h2 class="task-title">📚 The Library Door</h2>
             <p class="task-description">
                 The Fairy Godmother's first clue leads to a place filled with ancient wisdom and countless stories. 
                 Where books whisper secrets and knowledge awaits...
             </p>
 
             <div class="door-container">
-                <div class="magic-door" id="door1">
-                    <div class="door-panel door-left" id="door1-left">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-panel door-right" id="door1-right">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-light" id="door1-light"></div>
-                    <div class="door-reveal" id="door1-reveal">
-                        <div class="reveal-image">
-                            <img src="your-photo-1.jpg" alt="Library Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='📚👑'">
+                <div class="door-wrapper">
+                    <div class="door-glow"></div>
+                    <div class="magic-door" id="door1">
+                        <div class="door-frame">
+                            <div class="door-panel door-left" id="door1-left">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-1">✦</span>
+                                <span class="door-rune rune-2">✧</span>
+                            </div>
+                            <div class="door-panel door-right" id="door1-right">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-3">✦</span>
+                                <span class="door-rune rune-4">✧</span>
+                            </div>
+                            <div class="door-light" id="door1-light"></div>
                         </div>
-                        <div class="reveal-text">The Crown Was Here!</div>
-                        <div class="reveal-location"> The Library</div>
+                        <div class="door-reveal" id="door1-reveal">
+                            <div class="reveal-image">
+                                <img src="your-photo-1.jpg.png" alt="Library Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
+                            </div>
+                            <div class="reveal-text">The Crown Was Here!</div>
+                            <div class="reveal-location">📍 The Library</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="key-container">
-                <div class="key-label"> Enter the Key to Unlock:</div>
+                <div class="key-label">🔑 Enter the Key to Unlock:</div>
                 <input type="text" class="key-input" id="key1" placeholder="TYPE THE CODE">
                 <br>
                 <button class="unlock-btn" id="btn1" onclick="unlockDoor(1)">Unlock Door</button>
@@ -327,27 +586,36 @@
         <!-- STAGE 2 -->
         <div class="quest-stage" id="stage2">
             <div class="stage-number">2</div>
-            <h2 class="task-title">️ The Cafeteria Door</h2>
+            <h2 class="task-title">🍽️ The Cafeteria Door</h2>
             <p class="task-description">
                 After exploring the library, the Fairy Godmother felt hungry! She traveled to a place 
                 where delicious aromas fill the air and students gather to eat...
             </p>
 
             <div class="door-container">
-                <div class="magic-door" id="door2">
-                    <div class="door-panel door-left" id="door2-left">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-panel door-right" id="door2-right">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-light" id="door2-light"></div>
-                    <div class="door-reveal" id="door2-reveal">
-                        <div class="reveal-image">
-                            <img src="your-photo-2.jpg" alt="Cafeteria Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='🍕👑'">
+                <div class="door-wrapper">
+                    <div class="door-glow"></div>
+                    <div class="magic-door" id="door2">
+                        <div class="door-frame">
+                            <div class="door-panel door-left" id="door2-left">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-1">✦</span>
+                                <span class="door-rune rune-2">✧</span>
+                            </div>
+                            <div class="door-panel door-right" id="door2-right">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-3">✦</span>
+                                <span class="door-rune rune-4">✧</span>
+                            </div>
+                            <div class="door-light" id="door2-light"></div>
                         </div>
-                        <div class="reveal-text">The Crown Traveled Here!</div>
-                        <div class="reveal-location">📍 The School Cafeteria</div>
+                        <div class="door-reveal" id="door2-reveal">
+                            <div class="reveal-image">
+                                <img src="your-photo-2.jpg.png" alt="Cafeteria Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='🍕👑'">
+                            </div>
+                            <div class="reveal-text">The Crown Traveled Here!</div>
+                            <div class="reveal-location">📍 The School Cafeteria</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -370,39 +638,48 @@
         <!-- STAGE 3 -->
         <div class="quest-stage" id="stage3">
             <div class="stage-number">3</div>
-            <h2 class="task-title"> The Principal's Office Door</h2>
+            <h2 class="task-title">🏫 The Principal's Office Door</h2>
             <p class="task-description">
                 The final journey! The Fairy Godmother visited someone very important - the person 
                 who helps younger students and keeps the school running smoothly...
             </p>
 
             <div class="door-container">
-                <div class="magic-door" id="door3">
-                    <div class="door-panel door-left" id="door3-left">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-panel door-right" id="door3-right">
-                        <div class="door-knob"></div>
-                    </div>
-                    <div class="door-light" id="door3-light"></div>
-                    <div class="door-reveal" id="door3-reveal">
-                        <div class="reveal-image">
-                            <img src="your-photo-3.jpg" alt="Principal Office Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
+                <div class="door-wrapper">
+                    <div class="door-glow"></div>
+                    <div class="magic-door" id="door3">
+                        <div class="door-frame">
+                            <div class="door-panel door-left" id="door3-left">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-1">✦</span>
+                                <span class="door-rune rune-2">✧</span>
+                            </div>
+                            <div class="door-panel door-right" id="door3-right">
+                                <div class="door-knob"></div>
+                                <span class="door-rune rune-3">✦</span>
+                                <span class="door-rune rune-4"></span>
+                            </div>
+                            <div class="door-light" id="door3-light"></div>
                         </div>
-                        <div class="reveal-text">The Crown is Safe!</div>
-                        <div class="reveal-location">📍 Junior School Principal's Office</div>
+                        <div class="door-reveal" id="door3-reveal">
+                            <div class="reveal-image">
+                                <img src="your-photo-3.jpg.png" alt="Principal Office Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
+                            </div>
+                            <div class="reveal-text">The Crown is Safe!</div>
+                            <div class="reveal-location">📍 Junior School Principal's Office</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="key-container">
-                <div class="key-label"> Enter the Final Key:</div>
+                <div class="key-label">🔑 Enter the Final Key:</div>
                 <input type="text" class="key-input" id="key3" placeholder="TYPE THE CODE">
                 <br>
                 <button class="unlock-btn" id="btn3" onclick="unlockDoor(3)">Unlock Final Door</button>
                 <div class="error-message" id="error3">❌ Wrong key! Think about the principal's office...</div>
                 <div class="success-message" id="success3">✨ All doors unlocked! The crown is found!</div>
-                <button class="next-btn" id="next3" onclick="nextStage(4)">See the Crown! </button>
+                <button class="next-btn" id="next3" onclick="nextStage(4)">See the Crown! 👑</button>
             </div>
 
             <div class="hint">
@@ -413,14 +690,14 @@
         <!-- FINAL -->
         <div class="quest-stage" id="stage4">
             <div style="text-align: center;">
-                <div style="font-size: 7em; filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));">✨</div>
-                <h2 style="font-size: 2em; color: #ffd700; margin: 25px 0;">Congratulations, Detective!</h2>
+                <div style="font-size: 7em; filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); animation: crownFloat 3s ease-in-out infinite;">✨👑✨</div>
+                <h2 style="font-size: 2em; color: #ffd700; margin: 25px 0; text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);">Congratulations, Detective!</h2>
                 <p style="font-size: 1.3em; color: #d4d9ff; line-height: 1.8; margin: 25px 0;">
                     You've successfully unlocked all three magical doors!<br>
                     The enchanted crown has been found and is now <strong style="color: #ffd700;">safe with us</strong>!<br>
-                    Cinderella can finally marry the Prince! 👰‍♀️🤴
+                    Cinderella can finally marry the Prince! 👰♀️🤴
                 </p>
-                <div style="background: rgba(255, 215, 0, 0.1); border: 3px solid #ffd700; border-radius: 18px; padding: 25px; margin: 35px 0;">
+                <div style="background: rgba(255, 215, 0, 0.1); border: 3px solid #ffd700; border-radius: 18px; padding: 25px; margin: 35px 0; box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);">
                     <div style="font-size: 2.5em; margin-bottom: 15px;">🎊</div>
                     <p style="color: #ffd700; font-size: 1.4em; font-weight: bold;">
                         You are a true magical detective!
@@ -433,9 +710,6 @@
             <p>✨ The Magic Crown Quest • An Enchanted Adventure ✨</p>
         </footer>
     </div>
-
-    <!-- DEBUG кнопка -->
-    <button class="debug-btn" onclick="testDoor()">🔧 TEST DOOR</button>
 
     <script>
         // ===== СОЗДАНИЕ ЗВЁЗД =====
@@ -491,9 +765,6 @@
 
         // ===== ГЛАВНАЯ ФУНКЦИЯ ОТКРЫТИЯ ДВЕРИ =====
         function unlockDoor(stage) {
-            console.log('=== UNLOCK DOOR CALLED ===');
-            console.log('Stage:', stage);
-            
             const input = document.getElementById('key' + stage);
             const error = document.getElementById('error' + stage);
             const success = document.getElementById('success' + stage);
@@ -503,20 +774,14 @@
             const light = document.getElementById('door' + stage + '-light');
             const reveal = document.getElementById('door' + stage + '-reveal');
             
-            console.log('Input value:', input.value);
-            console.log('Correct code:', correctCodes[stage]);
-            
             const userCode = input.value.trim().toUpperCase();
-            console.log('User code (trimmed+upper):', userCode);
             
             if (userCode === correctCodes[stage]) {
-                console.log('✓ CORRECT CODE! Opening door...');
-                
                 // Скрываем ошибки, показываем успех
                 error.style.display = 'none';
                 success.style.display = 'block';
                 
-                // АНИМАЦИЯ ДВЕРЕЙ - ПРЯМО ЧЕРЕЗ СТИЛИ
+                // АНИМАЦИЯ ДВЕРЕЙ
                 leftPanel.style.transition = 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 rightPanel.style.transition = 'transform 1.5s cubic-bezier(0.4, 0, 0.2, 1)';
                 leftPanel.style.transform = 'translateX(-100%)';
@@ -534,9 +799,9 @@
                 // Кнопка "Next"
                 nextBtn.style.display = 'inline-block';
                 
-                console.log('✓ Door opened successfully!');
+                // Magical sparkles
+                createSparkles();
             } else {
-                console.log(' WRONG CODE');
                 error.style.display = 'block';
                 success.style.display = 'none';
                 
@@ -551,31 +816,69 @@
             document.getElementById('stage' + (stageNum - 1)).style.display = 'none';
             document.getElementById('stage' + stageNum).style.display = 'block';
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if (stageNum === 4) {
+                setTimeout(createConfetti, 500);
+            }
         }
 
-        // ===== ТЕСТОВАЯ КНОПКА =====
-        function testDoor() {
-            console.log('=== TEST DOOR BUTTON CLICKED ===');
-            alert('JavaScript работает! Попробуйте ввести LIBRARY и нажать Unlock Door. Откройте консоль браузера (F12) чтобы увидеть логи.');
-            
-            // Автоматически открываем первую дверь для теста
-            const leftPanel = document.getElementById('door1-left');
-            const rightPanel = document.getElementById('door1-right');
-            const light = document.getElementById('door1-light');
-            const reveal = document.getElementById('door1-reveal');
-            const success = document.getElementById('success1');
-            const nextBtn = document.getElementById('next1');
-            
-            leftPanel.style.transition = 'transform 1.5s';
-            rightPanel.style.transition = 'transform 1.5s';
-            leftPanel.style.transform = 'translateX(-100%)';
-            rightPanel.style.transform = 'translateX(100%)';
-            
-            setTimeout(function() { light.style.opacity = '1'; }, 500);
-            setTimeout(function() { reveal.style.opacity = '1'; }, 800);
-            
-            success.style.display = 'block';
-            nextBtn.style.display = 'inline-block';
+        // ===== MAGICAL SPARKLES =====
+        function createSparkles() {
+            for (let i = 0; i < 40; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.width = Math.random() * 15 + 5 + 'px';
+                    sparkle.style.height = sparkle.style.width;
+                    sparkle.style.background = `radial-gradient(circle, #ffd700, #ffed4e)`;
+                    sparkle.style.borderRadius = '50%';
+                    sparkle.style.left = Math.random() * 100 + 'vw';
+                    sparkle.style.top = Math.random() * 100 + 'vh';
+                    sparkle.style.boxShadow = '0 0 30px #ffd700, 0 0 60px #ffed4e';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '9999';
+                    document.body.appendChild(sparkle);
+                    
+                    sparkle.animate([
+                        { transform: 'scale(0) rotate(0deg)', opacity: 1 },
+                        { transform: 'scale(1.5) rotate(180deg)', opacity: 0.8 },
+                        { transform: 'scale(0) rotate(360deg)', opacity: 0 }
+                    ], {
+                        duration: 1500,
+                        easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
+                    }).onfinish = () => sparkle.remove();
+                }, i * 50);
+            }
+        }
+
+        // ===== CONFETTI =====
+        function createConfetti() {
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = Math.random() * 15 + 8 + 'px';
+                    confetti.style.height = Math.random() * 15 + 8 + 'px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-20px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.boxShadow = '0 0 10px rgba(255,255,255,0.5)';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    document.body.appendChild(confetti);
+                    
+                    const duration = Math.random() * 3 + 2;
+                    confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration * 1000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    }).onfinish = () => confetti.remove();
+                }, i * 25);
+            }
         }
 
         // ===== ENTER KEY =====
@@ -589,9 +892,6 @@
                     }
                 });
             });
-            
-            console.log('=== PAGE LOADED SUCCESSFULLY ===');
-            console.log('Correct codes:', correctCodes);
         });
 
         // Запуск
