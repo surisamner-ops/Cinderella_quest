@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👑 The Magic Crown Quest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', tahoma, geneva, verdana, sans-serif;
+            background: linear-gradient(to bottom, #0a0e27 0%, #1a1f4b 50%, #2d1b69 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        /* ENHANCED STARS BACKGROUND - MORE STARS! */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            opacity: var(--opacity);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: var(--opacity); transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(0.8); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #fff, #ffd700, transparent);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+            box-shadow: 0 0 20px #fff, 0 0 40px #ffd700;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateX(-150px) translateY(100px); opacity: 1; }
+            100% { transform: translateX(1200px) translateY(600px); opacity: 0; }
+        }
+
+        /* MORE MAGICAL PARTICLES */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 45px #ff6b6b;
+            animation: float var(--duration) ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translateY(50vh) scale(1.2) rotate(180deg); }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1) rotate(360deg); opacity: 0; }
+        }
+
+        /* SPARKLES */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px white, 0 0 20px #ffd700;
+            animation: sparkleAnim 2s linear infinite;
+        }
+
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
+        }
+
+        h1 {
+            font-size: 2.8em;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #b8c5ff;
+            line-height: 1.6;
+        }
+
+        /* SMALLER ROUNDED RECTANGLE */
+        .quest-stage {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 25px;
+            padding: 35px 30px;
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 1s ease-out;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(255, 215, 0, 0.1);
+        }
+
+        .quest-stage.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stage-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1f4b;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .task-title {
+            font-size: 1.8em;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .task-description {
+            font-size: 1.1em;
+            color: #d4d9ff;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        /* BIGGER DOORS */
+        .door-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .magic-door {
+            width: 380px;
+            height: 480px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .magic-door:hover {
+            transform: scale(1.03);
+        }
+
+        .door-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a3f1a 0%, #2d2410 100%);
+            border-radius: 25px 25px 0 0;
+            border: 10px solid #8b7355;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .door-panel {
+            position: absolute;
+            width: 47%;
+            height: 92%;
+            top: 4%;
+            background: linear-gradient(135deg, #6b5637 0%, #4a3f1a 100%);
+            border: 5px solid #8b7355;
+            border-radius: 12px;
+            transition: all 1s ease-in-out;
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.7);
+        }
+
+        .door-left {
+            left: 3%;
+            transform-origin: left;
+        }
+
+        .door-right {
+            right: 3%;
+            transform-origin: right;
+        }
+
+        .door-knob {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #ffd700, #b8860b);
+            border-radius: 50%;
+            top: 50%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.9);
+        }
+
+        .door-left .door-knob {
+            right: 25px;
+        }
+
+        .door-right .door-knob {
+            left: 25px;
+        }
+
+        .door.open .door-left {
+            transform: rotateY(-110deg);
+        }
+
+        .door.open .door-right {
+            transform: rotateY(110deg);
+        }
+
+        .door-light {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.9) 0%, rgba(255, 215, 0, 0.4) 40%, transparent 70%);
+            transition: all 1s ease-in-out;
+            opacity: 0;
+            filter: blur(10px);
+        }
+
+        .door.open .door-light {
+            width: 450px;
+            height: 550px;
+            opacity: 1;
+        }
+
+        .door-reveal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 360px;
+            height: 460px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1s;
+            z-index: -1;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 70px rgba(255, 215, 0, 0.7);
+        }
+
+        .door.open .door-reveal {
+            opacity: 1;
+        }
+
+        .reveal-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5em;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reveal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .reveal-text {
+            color: #1a1f4b;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .reveal-location {
+            color: #666;
+            font-size: 1em;
+            margin-top: 8px;
+        }
+
+        /* KEY INPUT */
+        .key-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .key-label {
+            font-size: 1.2em;
+            color: #ffd700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .key-input {
+            width: 100%;
+            max-width: 350px;
+            padding: 18px 25px;
+            font-size: 1.4em;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 215, 0, 0.5);
+            border-radius: 12px;
+            color: #fff;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.7);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .key-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .unlock-btn {
+            margin-top: 15px;
+            padding: 16px 45px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1f4b;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(255, 215, 0, 0.7);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 12px;
+            font-size: 1em;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+            border: 2px solid #10b981;
+            color: #10b981;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 1.1em;
+            display: none;
+            animation: successPulse 0.6s;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .next-btn {
+            margin-top: 25px;
+            padding: 16px 45px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
+            display: none;
+        }
+
+        .next-btn.show {
+            display: inline-block;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 45px rgba(16, 185, 129, 0.7);
+        }
+
+        .hint {
+            background: rgba(59, 130, 246, 0.2);
+            border-left: 4px solid #3b82f6;
+            padding: 12px 18px;
+            margin-top: 25px;
+            border-radius: 10px;
+            color: #93c5fd;
+            font-size: 0.95em;
+        }
+
+        .hint strong {
+            color: #ffd700;
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .quest-stage { padding: 25px 20px; border-radius: 20px; }
+            .magic-door { width: 320px; height: 420px; }
+            .door-reveal { width: 300px; height: 400px; }
+            .task-title { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Stars Background -->
+    <div class="stars" id="stars"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <header>
+            <h1> The Magic Crown Quest</h1>
+            <p class="subtitle">Unlock the magical doors to find the enchanted crown<br>and help Cinderella marry the Prince!</p>
+        </header>
+
+        <!-- STAGE 1 -->
+        <div class="quest-stage active" id="stage1">
+            <div class="stage-number">1</div>
+            <h2 class="task-title">📚 The Library Door</h2>
+            <p class="task-description">
+                The Fairy Godmother's first clue leads to a place filled with ancient wisdom and countless stories. 
+                Where books whisper secrets and knowledge awaits...
+            </p>
+
+            <div class="door-container">
+                <div class="magic-door" id="door1">
+                    <div class="door-frame">
+                        <div class="door-panel door-left">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-panel door-right">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-light"></div>
+                    </div>
+                    <div class="door-reveal">
+                        <div class="reveal-image">
+                            <!-- ВАШЕ ФОТО 1 - замените src на путь к вашему фото -->
+                            <img src="your-photo-1.jpg" alt="Library Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='📚'">
+                        </div>
+                        <div class="reveal-text">The Crown Was Here!</div>
+                        <div class="reveal-location">📍 The Library</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-container">
+                <div class="key-label">🔑 Enter the Key to Unlock:</div>
+                <input type="text" class="key-input" id="key1" placeholder="TYPE THE CODE">
+                <br>
+                <button class="unlock-btn" onclick="unlockDoor(1)">Unlock Door</button>
+                <div class="error-message" id="error1">❌ Wrong key! Think about books and knowledge...</div>
+                <div class="success-message" id="success1">✨ Door unlocked! The crown was in the library!</div>
+                <button class="next-btn" id="next1" onclick="nextStage(2)">Next Door →</button>
+            </div>
+
+            <div class="hint">
+                 <strong>Hint:</strong> This magical place is full of books where students study and read...
+            </div>
+        </div>
+
+        <!-- STAGE 2 -->
+        <div class="quest-stage" id="stage2">
+            <div class="stage-number">2</div>
+            <h2 class="task-title">🍽️ The Cafeteria Door</h2>
+            <p class="task-description">
+                After exploring the library, the Fairy Godmother felt hungry! She traveled to a place 
+                where delicious aromas fill the air and students gather to eat...
+            </p>
+
+            <div class="door-container">
+                <div class="magic-door" id="door2">
+                    <div class="door-frame">
+                        <div class="door-panel door-left">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-panel door-right">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-light"></div>
+                    </div>
+                    <div class="door-reveal">
+                        <div class="reveal-image">
+                            <!-- ВАШЕ ФОТО 2 - замените src на путь к вашему фото -->
+                            <img src="your-photo-2.jpg" alt="Cafeteria Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='🍕'">
+                        </div>
+                        <div class="reveal-text">The Crown Traveled Here!</div>
+                        <div class="reveal-location"> The School Cafeteria</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-container">
+                <div class="key-label">🍕 Enter the Key to Unlock:</div>
+                <input type="text" class="key-input" id="key2" placeholder="TYPE THE CODE">
+                <br>
+                <button class="unlock-btn" onclick="unlockDoor(2)">Unlock Door</button>
+                <div class="error-message" id="error2">❌ Wrong key! Where do students have lunch?</div>
+                <div class="success-message" id="success2">✨ Door unlocked! The crown moved to the cafeteria!</div>
+                <button class="next-btn" id="next2" onclick="nextStage(3)">Final Door →</button>
+            </div>
+
+            <div class="hint">
+                💡 <strong>Hint:</strong> It's where you grab your lunch tray and sit with friends... 🍱
+            </div>
+        </div>
+
+        <!-- STAGE 3 -->
+        <div class="quest-stage" id="stage3">
+            <div class="stage-number">3</div>
+            <h2 class="task-title">🏫 The Principal's Office Door</h2>
+            <p class="task-description">
+                The final journey! The Fairy Godmother visited someone very important - the person 
+                who helps younger students and keeps the school running smoothly...
+            </p>
+
+            <div class="door-container">
+                <div class="magic-door" id="door3">
+                    <div class="door-frame">
+                        <div class="door-panel door-left">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-panel door-right">
+                            <div class="door-knob"></div>
+                        </div>
+                        <div class="door-light"></div>
+                    </div>
+                    <div class="door-reveal">
+                        <div class="reveal-image">
+                            <!-- ВАШЕ ФОТО 3 - замените src на путь к вашему фото -->
+                            <img src="your-photo-3.jpg" alt="Principal Office Crown" onerror="this.style.display='none'; this.parentElement.innerHTML='👑'">
+                        </div>
+                        <div class="reveal-text">The Crown is Safe!</div>
+                        <div class="reveal-location">📍 Junior School Principal's Office</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-container">
+                <div class="key-label">🔑 Enter the Final Key:</div>
+                <input type="text" class="key-input" id="key3" placeholder="TYPE THE CODE">
+                <br>
+                <button class="unlock-btn" onclick="unlockDoor(3)">Unlock Final Door</button>
+                <div class="error-message" id="error3">❌ Wrong key! Think about the principal's office...</div>
+                <div class="success-message" id="success3">✨ All doors unlocked! The crown is found!</div>
+                <button class="next-btn" id="next3" onclick="nextStage(4)">See the Crown! 👑</button>
+            </div>
+
+            <div class="hint">
+                💡 <strong>Hint:</strong> Where does the junior school principal work? 
+            </div>
+        </div>
+
+        <!-- FINAL REVEAL -->
+        <div class="quest-stage" id="stage4">
+            <div style="text-align: center; animation: crownAppear 2s ease-out;">
+                <div style="font-size: 7em; filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); animation: crownFloat 3s ease-in-out infinite;">✨</div>
+                <h2 style="font-size: 2em; color: #ffd700; margin: 25px 0; text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);">Congratulations, Detective!</h2>
+                <p style="font-size: 1.3em; color: #d4d9ff; line-height: 1.8; margin: 25px 0;">
+                    You've successfully unlocked all three magical doors!<br>
+                    The enchanted crown has been found and is now <strong style="color: #ffd700;">safe with us</strong>!<br>
+                    Cinderella can finally marry the Prince! 👰‍♀️🤴
+                </p>
+                <div style="background: rgba(255, 215, 0, 0.1); border: 3px solid #ffd700; border-radius: 18px; padding: 25px; margin: 35px 0;">
+                    <div style="font-size: 2.5em; margin-bottom: 15px;">🎉🎊</div>
+                    <p style="color: #ffd700; font-size: 1.4em; font-weight: bold;">
+                        You are a true magical detective!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>✨ The Magic Crown Quest • An Enchanted Adventure ✨</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create MORE Stars
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 350; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 4 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                star.style.setProperty('--opacity', Math.random() * 0.8 + 0.2);
+                starsContainer.appendChild(star);
+            }
+            
+            // Add MORE shooting stars
+            for (let i = 0; i < 10; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = Math.random() * 50 + '%';
+                shootingStar.style.left = Math.random() * 50 + '%';
+                shootingStar.style.animationDelay = Math.random() * 10 + 's';
+                starsContainer.appendChild(shootingStar);
+            }
+
+            // Add sparkles
+            for (let i = 0; i < 50; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                starsContainer.appendChild(sparkle);
+            }
+        }
+
+        // Create MORE Magical Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.setProperty('--duration', (Math.random() * 10 + 10) + 's');
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        /* ============================================
+           КАК ПОМЕНЯТЬ КОДЫ:
+           Измените значения в объекте correctCodes ниже
+           ============================================ */
+        const correctCodes = {
+            1: 'LIBRARY',      // Код для первой двери (Stage 1)
+            2: 'CAFETERIA',    // Код для второй двери (Stage 2)
+            3: 'PRINCIPAL'     // Код для третьей двери (Stage 3)
+        };
+
+        function unlockDoor(stage) {
+            const input = document.getElementById(`key${stage}`);
+            const error = document.getElementById(`error${stage}`);
+            const success = document.getElementById(`success${stage}`);
+            const door = document.getElementById(`door${stage}`);
+            const nextBtn = document.getElementById(`next${stage}`);
+            const userCode = input.value.trim().toUpperCase();
+
+            if (userCode === correctCodes[stage]) {
+                error.classList.remove('show');
+                success.classList.add('show');
+                door.classList.add('open');
+                nextBtn.classList.add('show');
+                
+                // Create magical sparkles
+                createSparkles();
+            } else {
+                error.classList.add('show');
+                success.classList.remove('show');
+                setTimeout(() => error.classList.remove('show'), 3000);
+            }
+        }
+
+        function nextStage(stageNum) {
+            document.getElementById(`stage${stageNum-1}`).classList.remove('active');
+            const nextStageEl = document.getElementById(`stage${stageNum}`);
+            nextStageEl.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if (stageNum === 4) {
+                setTimeout(createConfetti, 500);
+            }
+        }
+
+        function createSparkles() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.width = '12px';
+                    sparkle.style.height = '12px';
+                    sparkle.style.background = '#ffd700';
+                    sparkle.style.borderRadius = '50%';
+                    sparkle.style.left = Math.random() * 100 + 'vw';
+                    sparkle.style.top = Math.random() * 100 + 'vh';
+                    sparkle.style.boxShadow = '0 0 25px #ffd700, 0 0 50px #fff';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.zIndex = '9999';
+                    document.body.appendChild(sparkle);
+                    
+                    sparkle.animate([
+                        { transform: 'scale(0)', opacity: 1 },
+                        { transform: 'scale(2)', opacity: 0 }
+                    ], {
+                        duration: 1200,
+                        easing: 'ease-out'
+                    }).onfinish = () => sparkle.remove();
+                }, i * 40);
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '14px';
+                    confetti.style.height = '14px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-20px';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    document.body.appendChild(confetti);
+                    
+                    const duration = Math.random() * 3 + 2;
+                    confetti.animate([
+                        { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration * 1000,
+                        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                    }).onfinish = () => confetti.remove();
+                }, i * 25);
+            }
+        }
+
+        // Allow Enter key
+        document.querySelectorAll('.key-input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const stage = this.id.replace('key', '');
+                    unlockDoor(stage);
+                }
+            });
+        });
+
+        // Initialize
+        createStars();
+        createParticles();
+    </script>
+</body>
+</html>
